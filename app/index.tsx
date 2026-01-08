@@ -40,7 +40,7 @@ export default function Index() {
   const [isRecording, setIsRecording] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [recordingDuration, setRecordingDuration] = useState(0);
-  const timerRef = useRef<number | null>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [currentId, setCurrentId] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [positionMillis, setPositionMillis] = useState(0);
@@ -130,7 +130,7 @@ export default function Index() {
       .sort((a, b) => b.createdAt - a.createdAt);
   }, [notes, search]);
 
-  // Storage helpers are imported from ./storage
+
 
   async function requestAudioPermissions() {
     const perm = await Audio.requestPermissionsAsync();
@@ -156,8 +156,7 @@ export default function Index() {
         interruptionModeAndroid: InterruptionModeAndroid.DoNotMix,
       });
       const rec = new Audio.Recording();
-      // enable metering so we can capture amplitude during recording (platform support varies)
-      const opts: any = {
+   const opts: any = {
         ...Audio.RecordingOptionsPresets.HIGH_QUALITY,
         ios: {
           ...Audio.RecordingOptionsPresets.HIGH_QUALITY.ios,
@@ -184,7 +183,7 @@ export default function Index() {
         },
       };
       try {
-        // prepare with metering-enabled options where supported
+     
         await rec.prepareToRecordAsync(opts as any);
       } catch {
         await rec.prepareToRecordAsync(
@@ -197,13 +196,13 @@ export default function Index() {
       setIsPaused(false);
       amplitudeSamplesRef.current = [];
       try {
-        // capture metering periodically; some platforms may not provide metering
+       
         rec.setProgressUpdateInterval(100);
-        // @ts-ignore
+      
         rec.setOnRecordingStatusUpdate?.((status: any) => {
           const m = status?.metering ?? status?.meteringPeak ?? undefined;
           if (typeof m === "number" && isFinite(m)) {
-            // Expo returns dBFS typically in [-160..0]; normalize to 0..1
+            
             const norm = Math.max(0, Math.min(1, (m + 160) / 160));
             amplitudeSamplesRef.current.push(norm);
           }
@@ -245,7 +244,7 @@ export default function Index() {
     } catch {}
   }
 
-  // Cancel current recording and discard the temp file
+
   async function cancelRecording() {
     if (!recording) return;
     try {
@@ -296,7 +295,7 @@ export default function Index() {
       await sound.unloadAsync();
       const createdAt = Date.now();
       const name = nextRecordingName(notes);
-      // Downsample recorded amplitude samples to a fixed bar count
+  
       const raw = amplitudeSamplesRef.current;
       const BAR_COUNT = 48;
       let amps: number[] | undefined = undefined;
@@ -309,7 +308,7 @@ export default function Index() {
           const avg = slice.reduce((a, b) => a + b, 0) / slice.length;
           out.push(avg);
         }
-        // ensure exactly BAR_COUNT by resampling/interpolating if necessary
+     
         const scaled: number[] = [];
         for (let i = 0; i < BAR_COUNT; i++) {
           const t = (i / (BAR_COUNT - 1)) * (out.length - 1);
@@ -318,7 +317,7 @@ export default function Index() {
           const frac = t - i0;
           scaled.push(out[i0] * (1 - frac) + out[i1] * frac);
         }
-        // normalize to [0.1..1] to avoid invisible tiny bars
+  
         const min = Math.min(...scaled);
         const max = Math.max(...scaled);
         const norm = scaled.map((v) => {
@@ -362,7 +361,7 @@ export default function Index() {
           setPositionMillis(status.positionMillis ?? 0);
           setIsPlaying(status.isPlaying ?? false);
           if (status.didJustFinish) {
-            // Stop at end; require manual tap to play again
+    
             setIsPlaying(false);
             setPositionMillis(status.durationMillis ?? 0);
           }
@@ -376,7 +375,7 @@ export default function Index() {
       setCurrentId(note.id);
     } else {
       if (soundRef.current) {
-        // If we're at or near the end, rewind to start before playing
+        
         try {
           if (
             durationMillis > 0 &&
@@ -453,7 +452,7 @@ export default function Index() {
           );
     const bars = amps.map((a) => Math.round(minH + a * (maxH - minH)));
     const barsCount = BAR_COUNT;
-    // snap playback position to a bar index [0..barsCount-1]
+    
     const progressIndex = durationMillis
       ? Math.max(
           0,
@@ -475,7 +474,7 @@ export default function Index() {
           padding: 12,
         }}
       >
-        {/* Title row with 3-dots */}
+      
         <View
           style={{
             flexDirection: "row",
@@ -508,7 +507,7 @@ export default function Index() {
             <Text style={{ color: "#0a0a0a", opacity: 0.6, marginTop: 2 }}>
               {new Date(item.createdAt).toLocaleDateString()}
             </Text>
-            {/* WhatsApp-like inline player */}
+           
             <View
               style={{
                 flexDirection: "row",
@@ -516,7 +515,7 @@ export default function Index() {
                 marginTop: 8,
               }}
             >
-              {/* Speed pill */}
+         
               <TouchableOpacity
                 disabled={isRecording}
                 onPress={() => {
@@ -545,7 +544,7 @@ export default function Index() {
                 </Text>
               </TouchableOpacity>
 
-              {/* Play/Pause */}
+              
               <TouchableOpacity
                 disabled={isRecording}
                 onPress={() => playNote(item)}
@@ -572,7 +571,7 @@ export default function Index() {
                 />
               </TouchableOpacity>
 
-              {/* Waveform with tap/drag seek (continuous) */}
+            
               <View
                 style={{ flex: 1, height: 32, justifyContent: "center" }}
                 onLayout={(e) => {
@@ -610,7 +609,7 @@ export default function Index() {
                   const w = waveformWidthRef.current || 1;
                   const frac = Math.max(0, Math.min(1, x / w));
                   if (!selected) {
-                    // ignore drag updates on non-selected to avoid auto-playing continuously
+                    
                     return;
                   }
                   if (!soundRef.current) return;
@@ -662,7 +661,7 @@ export default function Index() {
               </View>
             </View>
 
-            {/* Time row under bubble: before play show total, during play show elapsed */}
+
             <View
               style={{
                 flexDirection: "row",
@@ -748,7 +747,7 @@ export default function Index() {
         contentContainerStyle={{ paddingBottom: 80, paddingTop: 8 }}
         ListEmptyComponent={() => (
           <View style={{ padding: 32, alignItems: "center" }}>
-            {/* <Text style={{ fontSize: 22, marginBottom: 6 }}>🎙️</Text> */}
+           
             <Text style={{ color: "#000", fontSize: 16, fontWeight: "600" }}>
               No recordings yet
             </Text>
@@ -831,7 +830,7 @@ export default function Index() {
         </View>
       </Modal>
 
-      {/* Overflow menu for rename/delete */}
+
       <Modal visible={!!menuTarget} animationType="fade" transparent>
         <View
           style={{
