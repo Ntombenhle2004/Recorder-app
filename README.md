@@ -1,50 +1,94 @@
+<img src="https://socialify.git.ci/Ntombenhle2004/Recorder-app/image?language=1&owner=1&name=1&stargazers=1&theme=Light" alt="Recorder-app" width="640" height="320" />
+
 # Recorder App
-Recorder App is a mobile voice recording application built with **Expo and React Native**. It allows users to create, manage, and play back voice notes using their device’s microphone. The app focuses on core CRUD functionality while keeping the interface simple and easy to use.
 
-## Features
-- Record audio using the device microphone
-- Pause, resume, cancel, and save recordings
-- Display a list of saved voice notes
-- Play and pause recordings with time progress display
-- Rename existing voice notes
-- Delete voice notes
-- Search voice notes by name
-- Persist recordings and metadata locally on the device
+## Project Description
+**Recorder App** is a mobile and web application built using **React Native**, **Expo**, and **Expo Router**.  
+The application allows users to record and manage audio recordings directly from their device.
 
-## How It Works
-- Audio recording and playback are handled using Expo’s audio APIs
-- Recordings are saved locally on the device file system
-- Metadata (name, duration, creation date) is stored in a JSON file
-- The UI is built using reusable React Native components
+The app uses **Expo AV** for audio recording functionality and modern **React Native components** to provide a simple and efficient voice recording experience.
 
-## Tech Stack
-- **Expo SDK 54**
-- **React Native**
-- **Expo Router** for navigation
-- **Expo AV** for audio recording and playback
-- **Expo FileSystem** for local storage
-- **TypeScript** for type safety
+---
 
-## Project Structure
-```
-app/
-  index.tsx             # Main screen
-components/
-  RecorderControls.tsx  # Recording controls
-  VoiceNoteItem.tsx     # Voice note list item
-  RenameModal.tsx       # Rename dialog
-  SearchBar.tsx         # Search input
-storage.ts              # File system and persistence helpers
-types.ts                # VoiceNote type definition
+# Technologies Used
+
+- React Native
+- Expo
+- Expo Router
+- Expo AV
+- TypeScript
+- React Navigation
+- ESLint
+
+---
+
+# Project Setup
+
+## 1. Clone the Repository
+
+```bash
+git clone https://github.com/your-username/recorder-app.git
 ```
 
-## Running the App
+---
+
+
+## 3. Install Dependencies
+
 ```bash
 npm install
+```
+
+
+# Running the Application
+
+## Start the Expo Development Server
+
+```bash
 npm start
 ```
-Run the app using **Expo Go** or an Android/iOS emulator.
 
-## Platform Notes
-- Full functionality is available on **Android**
-- Web support is limited due to file system and audio restrictions
+
+
+# Main Dependencies
+
+- expo
+- react
+- react-native
+- expo-router
+- expo-av
+- react-navigation
+- expo-haptics
+- expo-image
+- expo-splash-screen
+
+---
+
+# Development Dependencies
+
+- TypeScript
+- ESLint
+- eslint-config-expo
+- @types/react
+
+---
+
+# Project Structure (Example)
+
+```
+recorder-app
+│
+├── app
+│   ├── screens
+│   ├── components
+│   └── navigation
+│
+├── assets
+│
+├── scripts
+│
+├── package.json
+│
+└── README.md
+```
+
