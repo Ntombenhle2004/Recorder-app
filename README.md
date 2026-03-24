@@ -27,7 +27,7 @@ The app uses **Expo AV** for audio recording functionality and modern **React Na
 ## 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/recorder-app.git
+https://github.com/Ntombenhle2004/Recorder-app.git
 ```
 
 ---
